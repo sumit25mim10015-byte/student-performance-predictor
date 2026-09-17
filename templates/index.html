@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance Predictor - ML Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        
+        <!-- HEADER SECTION -->
+        <header class="main-header">
+            <h1>🎓 STUDENT PERFORMANCE PREDICTOR</h1>
+            <p class="subtitle">Predict academic performance using Machine Learning</p>
+        </header>
+
+        <!-- HOW IT WORKS SECTION (Before Input) -->
+        <div class="how-it-works">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <p>Enter Student Information</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <p>ML Model Processes Data</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <p>Decision Tree Predicts</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <p>Result & Suggestions</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- INPUT FORM SECTION -->
+        <div class="card input-card">
+            <h2>📊 Enter Student Information</h2>
+            
+            <!-- Display error if any -->
+            {% if error %}
+            <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" action="/predict">
+                <div class="form-group">
+                    <label for="study_hours">📚 Study Hours (per day)</label>
+                    <input type="number" step="0.1" id="study_hours" name="study_hours" 
+                           placeholder="Enter hours (0-24)" min="0" max="24" required>
+                    <small>Recommended: 4-8 hours/day</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="attendance">📅 Attendance Percentage</label>
+                    <input type="number" step="0.1" id="attendance" name="attendance" 
+                           placeholder="Enter percentage (0-100)" min="0" max="100" required>
+                    <small>Recommended: Above 75%</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="previous_score">📝 Previous Exam Score</label>
+                    <input type="number" step="0.1" id="previous_score" name="previous_score" 
+                           placeholder="Enter score (0-100)" min="0" max="100" required>
+                    <small>Your last exam performance</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="assignment_score">📋 Assignment Score</label>
+                    <input type="number" step="0.1" id="assignment_score" name="assignment_score" 
+                           placeholder="Enter score (0-100)" min="0" max="100" required>
+                    <small>Average assignment completion</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="sleep_hours">😴 Sleep Hours (per day)</label>
+                    <input type="number" step="0.1" id="sleep_hours" name="sleep_hours" 
+                           placeholder="Enter hours (0-24)" min="0" max="24" required>
+                    <small>Recommended: 6-8 hours/day</small>
+                </div>
+
+                <button type="submit" class="btn-predict">🔮 PREDICT PERFORMANCE</button>
+            </form>
+        </div>
+
+        <!-- PREDICTION RESULT SECTION -->
+        {% if prediction %}
+        
+        <!-- MAIN RESULT CARD -->
+        <div class="card result-card animate-fade-in">
+            <h2>🎯 Performance Result</h2>
+            
+            <div class="prediction-box {{ risk_class }}">
+                <div class="prediction-label">Predicted Performance</div>
+                <div class="prediction-value">{{ prediction }}</div>
+                <div class="risk-badge {{ risk_class }}">{{ risk_level }}</div>
+            </div>
+
+            <div class="student-info-summary">
+                <h3>📋 Student Information Summary</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Study Hours:</span>
+                        <span class="info-value">{{ input_study_hours }} hrs/day</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Attendance:</span>
+                        <span class="info-value">{{ input_attendance }}%</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Previous Score:</span>
+                        <span class="info-value">{{ input_previous_score }}%</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Assignment Score:</span>
+                        <span class="info-value">{{ input_assignment_score }}%</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Sleep Hours:</span>
+                        <span class="info-value">{{ input_sleep_hours }} hrs/day</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STUDENT ANALYSIS SECTION -->
+        <div class="card analysis-card animate-fade-in">
+            <h2>📈 Your Analysis</h2>
+            <div class="analysis-grid">
+                
+                <div class="analysis-item {{ analysis.study_hours.status|lower }}">
+                    <div class="analysis-icon">{{ analysis.study_hours.icon }}</div>
+                    <div class="analysis-content">
+                        <h4>Study Hours</h4>
+                        <p class="analysis-value">{{ analysis.study_hours.value }} hrs/day</p>
+                        <span class="analysis-status">{{ analysis.study_hours.status }}</span>
+                    </div>
+                </div>
+
+                <div class="analysis-item {{ analysis.attendance.status|lower }}">
+                    <div class="analysis-icon">{{ analysis.attendance.icon }}</div>
+                    <div class="analysis-content">
+                        <h4>Attendance</h4>
+                        <p class="analysis-value">{{ analysis.attendance.value }}%</p>
+                        <span class="analysis-status">{{ analysis.attendance.status }}</span>
+                    </div>
+                </div>
+
+                <div class="analysis-item {{ analysis.previous_score.status|lower }}">
+                    <div class="analysis-icon">{{ analysis.previous_score.icon }}</div>
+                    <div class="analysis-content">
+                        <h4>Previous Score</h4>
+                        <p class="analysis-value">{{ analysis.previous_score.value }}%</p>
+                        <span class="analysis-status">{{ analysis.previous_score.status }}</span>
+                    </div>
+                </div>
+
+                <div class="analysis-item {{ analysis.assignment_score.status|lower }}">
+                    <div class="analysis-icon">{{ analysis.assignment_score.icon }}</div>
+                    <div class="analysis-content">
+                        <h4>Assignment Score</h4>
+                        <p class="analysis-value">{{ analysis.assignment_score.value }}%</p>
+                        <span class="analysis-status">{{ analysis.assignment_score.status }}</span>
+                    </div>
+                </div>
+
+                <div class="analysis-item {{ analysis.sleep_hours.status|lower }}">
+                    <div class="analysis-icon">{{ analysis.sleep_hours.icon }}</div>
+                    <div class="analysis-content">
+                        <h4>Sleep Hours</h4>
+                        <p class="analysis-value">{{ analysis.sleep_hours.value }} hrs/day</p>
+                        <span class="analysis-status">{{ analysis.sleep_hours.status }}</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SUGGESTIONS SECTION -->
+        <div class="card suggestions-card animate-fade-in">
+            <h2>💡 Personalized Suggestions</h2>
+            <p class="suggestions-note">
+                <em>Note: These are rule-based suggestions generated from your input values, not ML predictions.</em>
+            </p>
+            <div class="suggestions-list">
+                {% for suggestion in suggestions %}
+                <div class="suggestion-item {{ suggestion.type }}">
+                    {% if suggestion.type == 'warning' %}
+                    <span class="suggestion-icon">⚠️</span>
+                    {% else %}
+                    <span class="suggestion-icon">✓</span>
+                    {% endif %}
+                    <p>{{ suggestion.text }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% endif %}
+
+        <!-- MODEL INFORMATION SECTION -->
+        <div class="card model-info-card">
+            <h2>🤖 About The Model</h2>
+            <div class="model-details">
+                <div class="model-detail-item">
+                    <strong>Algorithm:</strong>
+                    <span>Decision Tree Classifier</span>
+                </div>
+                <div class="model-detail-item">
+                    <strong>ML Type:</strong>
+                    <span>Supervised Learning</span>
+                </div>
+                <div class="model-detail-item">
+                    <strong>Problem Type:</strong>
+                    <span>Classification</span>
+                </div>
+                <div class="model-detail-item">
+                    <strong>Prediction Classes:</strong>
+                    <span>Good | Average | At Risk</span>
+                </div>
+                <div class="model-detail-item">
+                    <strong>Training Performance:</strong>
+                    <span>Model evaluation performed during training</span>
+                </div>
+            </div>
+            <p class="model-description">
+                The Decision Tree model learns patterns from student academic data and predicts the performance 
+                category for new student inputs based on study habits, attendance, previous scores, and sleep patterns.
+            </p>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>Built with Python, Flask, Scikit-learn & Decision Tree Classifier</p>
+            <p class="footer-note">College Project - Introduction to AI & ML</p>
+        </footer>
+
+    </div>
+</body>
+</html>
