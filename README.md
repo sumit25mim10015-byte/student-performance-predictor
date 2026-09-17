@@ -1,134 +1,177 @@
 # 🎓 Student Performance Predictor
 
-A Machine Learning web application that predicts student academic performance based on study habits, attendance, and academic scores using Decision Tree Classifier.
+A Machine Learning web application that predicts student academic performance based on study habits, attendance, previous academic scores, assignment performance, and sleep hours using a Decision Tree Classifier.
+
+The application provides a predicted performance category, corresponding risk level, individual metric analysis, and rule-based suggestions for improvement.
 
 ---
 
 ## 📋 Table of Contents
 
-- [Project Overview](#project-overview)
-- [Problem Statement](#problem-statement)
-- [Objectives](#objectives)
-- [Features](#features)
-- [Technology Stack](#technology-stack)
-- [Dataset Information](#dataset-information)
-- [Machine Learning Algorithm](#machine-learning-algorithm)
-- [Project Structure](#project-structure)
-- [Installation Guide](#installation-guide)
-- [How to Run](#how-to-run)
-- [Usage Instructions](#usage-instructions)
-- [Functional Modules](#functional-modules)
-- [Model Evaluation](#model-evaluation)
-- [Screenshots](#screenshots)
-- [Example Prediction](#example-prediction)
-- [Limitations](#limitations)
-- [Future Enhancements](#future-enhancements)
-- [Contributors](#contributors)
-- [License](#license)
+- [Project Overview](#-project-overview)
+- [Problem Statement](#-problem-statement)
+- [Objectives](#-objectives)
+- [Scope](#-scope)
+- [Target Users](#-target-users)
+- [Functional Modules](#-functional-modules)
+- [Features](#-features)
+- [Non-Functional Requirements](#-non-functional-requirements)
+- [Technology Stack](#-technology-stack)
+- [System Workflow](#-system-workflow)
+- [Dataset Information](#-dataset-information)
+- [Machine Learning Model](#-machine-learning-model)
+- [Model Selection Rationale](#-model-selection-rationale)
+- [Model Training](#-model-training)
+- [Model Evaluation](#-model-evaluation)
+- [Project Structure](#-project-structure)
+- [Installation Guide](#-installation-guide)
+- [How to Run](#-how-to-run)
+- [Usage Instructions](#-usage-instructions)
+- [Example Prediction](#-example-prediction)
+- [Testing](#-testing)
+- [Screenshots](#-screenshots)
+- [Limitations](#-limitations)
+- [Future Enhancements](#-future-enhancements)
+- [Challenges Faced](#-challenges-faced)
+- [Learning Outcomes](#-learning-outcomes)
+- [GitHub and Version Control](#-github-and-version-control)
+- [References](#-references)
+- [License](#-license)
 
 ---
 
 ## 🎯 Project Overview
 
-The **Student Performance Predictor** is a beginner-level Machine Learning project developed for the **Introduction to AI & ML** course. The system analyzes student academic and behavioral data to predict their performance category and provides personalized suggestions for improvement.
+The **Student Performance Predictor** is a beginner-level Machine Learning project developed for the **Introduction to AI & ML** course.
 
-The application uses a **Decision Tree Classifier** to categorize students into three performance levels:
-- ✅ **Good** - Student is performing well
-- ⚠️ **Average** - Student needs improvement
-- 🚨 **At Risk** - Student requires immediate attention
+The system analyzes selected academic and lifestyle-related student information and uses a trained Machine Learning classification model to predict one of three performance categories:
+
+- ✅ **Good**
+- ⚠️ **Average**
+- 🚨 **At Risk**
+
+After generating the prediction, the application assigns a corresponding risk level and provides rule-based suggestions based on the student's input values.
+
+The project demonstrates how Machine Learning classification can be integrated into a simple web application using Python and Flask.
+
+> **Important:** The prediction is intended for educational demonstration and does not guarantee a student's actual future academic performance.
 
 ---
 
 ## 🔍 Problem Statement
 
-Many students struggle academically without understanding the underlying factors affecting their performance. Early identification of at-risk students can help educators and parents intervene timely with appropriate support and guidance.
+Students may experience academic difficulties due to factors such as insufficient study time, low attendance, previous academic performance, assignment performance, and inadequate sleep.
 
-**Challenge:** How can we predict student performance based on their study habits and academic history?
+Early identification of students who may require additional academic support can help encourage timely improvement.
 
-**Solution:** Build a Machine Learning classification model that analyzes student data and predicts performance categories while providing actionable suggestions.
+### Problem
+
+How can student-related academic and lifestyle information be used to classify a student's current performance category using Machine Learning?
+
+### Proposed Solution
+
+The project develops a web-based Machine Learning system that accepts selected student parameters and uses a **Decision Tree Classifier** to classify the student into:
+
+- Good
+- Average
+- At Risk
+
+The system also provides a corresponding risk level and rule-based improvement suggestions.
 
 ---
 
 ## 🎯 Objectives
 
-1. **Predict** student academic performance using Machine Learning
-2. **Identify** at-risk students early for timely intervention
-3. **Analyze** individual academic metrics (study hours, attendance, scores, sleep)
-4. **Provide** personalized, rule-based suggestions for improvement
-5. **Demonstrate** practical application of Machine Learning in education
-6. **Create** a user-friendly web interface for easy interaction
+The main objectives of the project are:
+
+1. Predict student performance using Machine Learning.
+2. Classify students into Good, Average, and At Risk categories.
+3. Analyze important student-related input parameters.
+4. Provide a simple risk-level interpretation of the prediction.
+5. Provide rule-based suggestions for possible improvement.
+6. Demonstrate the practical application of Machine Learning in education.
+7. Develop a simple and user-friendly web interface.
+8. Demonstrate integration between a Machine Learning model and a web application.
 
 ---
 
-## ✨ Features
+## 📌 Scope
 
-### Core Features
-- 📊 **Performance Prediction** - Classifies students into Good/Average/At Risk
-- 🎯 **Risk Level Assessment** - Assigns Low/Medium/High risk levels
-- 📈 **Individual Metric Analysis** - Evaluates each input parameter separately
-- 💡 **Personalized Suggestions** - Provides rule-based recommendations
-- ✅ **Input Validation** - Ensures data integrity with range checking
-- 📱 **Responsive Design** - Works on desktop, tablet, and mobile devices
+The project focuses on Machine Learning-based classification of student performance using structured numerical data.
 
-### User Interface Features
-- Clean and professional design
-- Step-by-step process visualization
-- Interactive input forms with helpful hints
-- Color-coded result indicators
-- Detailed analysis cards
-- Model information display
+The system accepts five input parameters:
+
+- Study Hours
+- Attendance Percentage
+- Previous Exam Score
+- Assignment Score
+- Sleep Hours
+
+The trained Decision Tree Classifier processes these inputs and predicts the student's performance category.
+
+The system is designed as an educational project and is not intended to replace professional academic assessment or institutional decision-making.
 
 ---
 
-## 🛠️ Technology Stack
+## 👥 Target Users
 
-### Backend
-- **Python 3.x** - Programming language
-- **Flask** - Web framework for building the application
-- **Scikit-learn** - Machine Learning library
-- **Pandas** - Data manipulation and analysis
-- **NumPy** - Numerical computations
-- **Joblib** - Model serialization
+The intended users of the system are:
 
-### Frontend
-- **HTML5** - Structure and content
-- **CSS3** - Styling and layout
-- **Jinja2** - Templating engine (integrated with Flask)
+### 1. Students
 
-### Development Tools
-- Visual Studio Code (recommended)
-- Git (version control)
-- Python pip (package manager)
+Students can enter their academic and lifestyle information to view their predicted performance category and suggestions.
+
+### 2. Teachers and Mentors
+
+Teachers or mentors can use the system as a simple demonstration tool for identifying students who may require additional academic attention.
+
+### 3. Academic Evaluators
+
+The project demonstrates the practical implementation of Machine Learning classification concepts in an educational application.
 
 ---
 
-## 📊 Dataset Information
+# ⚙️ Functional Modules
 
-### Dataset Specifications
-- **File:** `student_performance.csv`
-- **Total Records:** 200 student samples
-- **Features:** 5 input variables
-- **Target Variable:** 1 categorical output (performance)
+The project contains three major functional modules.
 
-### Features Description
+## Module 1 — Student Input and Validation
 
-| Feature | Description | Range | Type |
-|---------|-------------|-------|------|
-| **study_hours** | Daily study hours | 0-24 | Continuous |
-| **attendance** | Class attendance percentage | 0-100 | Continuous |
-| **previous_score** | Last exam score | 0-100 | Continuous |
-| **assignment_score** | Assignment completion score | 0-100 | Continuous |
-| **sleep_hours** | Daily sleep hours | 0-24 | Continuous |
-| **performance** | Performance category (Target) | Good/Average/At Risk | Categorical |
+The user enters:
 
-### Dataset Distribution
-- **Good Performance:** ~40% of students
-- **Average Performance:** ~35% of students
-- **At Risk:** ~25% of students
+- Study Hours
+- Attendance
+- Previous Exam Score
+- Assignment Score
+- Sleep Hours
 
-### Sample Data
-```csv
-study_hours,attendance,previous_score,assignment_score,sleep_hours,performance
-8,95,92,94,8,Good
-5,78,75,77,6,Average
-2,58,55,57,5,At Risk
+The application validates the input values before processing them.
+
+### Input
+
+Student academic and lifestyle information.
+
+### Output
+
+Validated input data or an appropriate validation message.
+
+---
+
+## Module 2 — Machine Learning Prediction
+
+The validated input is passed to the trained **Decision Tree Classifier**.
+
+### Input
+
+Five numerical student features.
+
+### Processing
+
+```text
+Student Input
+      ↓
+Input Validation
+      ↓
+Decision Tree Classifier
+      ↓
+Performance Classification
